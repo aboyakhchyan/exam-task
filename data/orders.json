@@ -1,0 +1,11 @@
+[
+    {
+        "id": "O001",
+        "customerId": 1737099491875,
+        "items": [
+          { "productId": 1737101947066, "quantity": 1 }
+        ],
+        "totalPrice": 1200,
+        "date": "2025-01-01"
+      }
+]

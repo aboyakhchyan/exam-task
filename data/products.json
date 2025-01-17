@@ -1,0 +1,14 @@
+[
+  {
+    "id": 1737101947066,
+    "name": "samsung",
+    "price": 1200,
+    "description": "phone"
+  },
+  {
+    "id": 1737102118564,
+    "name": "iphone",
+    "price": 1500,
+    "description": "phone"
+  }
+]

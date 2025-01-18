@@ -11,67 +11,46 @@ const addReview = (req, res) => {
         const user = req.user
         const {id} = req.params
 
-        const productsFilter = products.filter(product => product.id == id)
         const product = products.find(product => product.id == id)
-        const orderCheck = orders.find(order => order.customerId == user.id)
 
-        const totalPrice = productsFilter.reduce((aggr, product) => aggr + product.price, 0)
+        let order = orders.find(order => order.customerId == user.id)
 
-        if(orderCheck) {
-            orders = orders.map(order => {
-                if(order.customerId == user.id) {
-                    const result = {
-                        id: Date.now(),
-                        customerId: user.id,
-                        totalPrice,
-                        items: order.items.map(item => {
-                            if(item.productId == id) {
-                                return {
-                                    productId,
-                                    quantity: ++item.quantity
-                                }
-                            }else {
-                                return item
-                            }
-                        }),
-                        date: new Date().toISOString()
-                      }
 
-                      return result
-                }else {
-                    return order
-                }
-            })
+        if (order) {
+            const existingItem = order.items.find(item => item.productId == id)
 
-            fs.writeFileSync(orderFilePath, JSON.stringify(orders, null, 2))
+            if (existingItem) {
+                existingItem.quantity++
+            } else {
+                
+                order.items.push({ productId: id, quantity: 1 })
+            }
 
-            return res.status.json({message: 'item added'})
+            
+            order.totalPrice = order.items.reduce((total, item) => {
+                const product = products.find(p => p.id == item.productId)
+                return total + product.price * item.quantity
+            }, 0)
+
+            order.date = new Date().toISOString()
+        } else {
+            order = {
+                id: Date.now(),
+                customerId: user.id,
+                items: [{ productId: id, quantity: 1 }],
+                totalPrice: product.price,
+                date: new Date().toISOString()
+            }
+
+            orders.push(order)
         }
-
-        orders.push({
-            id: Date.now(),
-            customerId: user.id,
-            totalPrice: product,
-            items: [{
-                productId: id,
-                quantity: 1
-            }],
-            totalPrice: product.price,
-            date: new Date.toISOString()
-        })
-
         fs.writeFileSync(orderFilePath, JSON.stringify(orders, null, 2))
 
-        return res.status.json({message: 'item added'})
-
-
-    }catch (err) {
-        return res.status(500).json({message: 'server error'})
+        return res.status(200).json({ message: 'Item added to order' })
+    } catch (err) {
+        console.error(err)
+        return res.status(500).json({ message: 'Server error' })
     }
-    
-
-
-    res.status(201).json({message: 'orders added'})
 }
 
 module.exports = {

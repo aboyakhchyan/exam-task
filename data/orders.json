@@ -1,11 +1,14 @@
 [
-    {
-        "id": "O001",
-        "customerId": 1737099491875,
-        "items": [
-          { "productId": 1737101947066, "quantity": 1 }
-        ],
-        "totalPrice": 1200,
-        "date": "2025-01-01"
+  {
+    "id": "O001",
+    "customerId": 1737099491875,
+    "items": [
+      {
+        "productId": 1737101947066,
+        "quantity": 2
       }
+    ],
+    "totalPrice": 2400,
+    "date": "2025-01-18T09:31:51.882Z"
+  }
 ]
